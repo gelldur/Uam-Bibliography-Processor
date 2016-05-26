@@ -113,3 +113,59 @@ TEST(BibParserTest, minimalKeys)
 	EXPECT_EQ("2006", bib.getValue("d"));
 }
 
+TEST(BibParserTest, minimalKeysAndValues)
+{
+	BibParser parser;
+
+	auto singleBib = parser.parse("\\bib{A}{B}{"
+										  "a={a},"
+										  "a={b},"
+										  "t={c},"
+										  "s={d},"
+										  "v={e},"
+										  "p={f},"
+										  "d={{}},"
+										  "}");
+
+	EXPECT_EQ(1, singleBib.size());
+
+	auto& bib = singleBib.front();
+	EXPECT_EQ("A", bib.getCite());
+	EXPECT_EQ("B", bib.getEntryType());
+	EXPECT_EQ("c", bib.getValue("t"));
+	EXPECT_EQ("a", bib.getValue("a"));
+	EXPECT_EQ("b", bib.getValue("a", 1));
+	EXPECT_EQ("d", bib.getValue("s"));
+	EXPECT_EQ("e", bib.getValue("v"));
+	EXPECT_EQ("f", bib.getValue("p"));
+	EXPECT_EQ("{}", bib.getValue("d"));
+}
+
+TEST(BibParserTest, minimalKeysAndValuesRandomSpaces)
+{
+	BibParser parser;
+
+	auto singleBib = parser.parse("\\bib  {A} {B}  {"
+										  "a={a}  ,"
+										  "             a={b}  ,"
+										  "   t={c} , "
+										  "  s={d},   "
+										  "       v={e},"
+										  "p={f}  ,"
+										  "d={{  }  },"
+										  "}");
+
+	EXPECT_EQ(1, singleBib.size());
+
+	auto& bib = singleBib.front();
+	EXPECT_EQ("A", bib.getCite());
+	EXPECT_EQ("B", bib.getEntryType());
+	EXPECT_EQ("c", bib.getValue("t"));
+	EXPECT_EQ("a", bib.getValue("a"));
+	EXPECT_EQ("b", bib.getValue("a", 1));
+	EXPECT_EQ("d", bib.getValue("s"));
+	EXPECT_EQ("e", bib.getValue("v"));
+	EXPECT_EQ("f", bib.getValue("p"));
+	EXPECT_EQ("{  }  ", bib.getValue("d"));
+}
+
