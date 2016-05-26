@@ -95,10 +95,11 @@ std::vector<KeyValue> BibParser::extract(const std::string& text)
 		{
 			--keyStart;
 		}
-		assert(keyStart + 1 < lastFind && "Invalid!");
+		++keyStart;
+		assert(keyStart <= lastFind && "Invalid!");
 
 		auto value = extractBraces(text, lastFind + KEY.length());
-		KeyValue keyValue(text.substr(keyStart + 1, lastFind - keyStart), value.second);
+		KeyValue keyValue(text.substr(keyStart, lastFind - keyStart + 1), value.second);
 
 		keyValues.emplace_back(keyValue);
 		lastFind = value.first;

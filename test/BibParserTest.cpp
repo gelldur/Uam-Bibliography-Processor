@@ -85,3 +85,31 @@ TEST(BibParserTest, extraSpaces)
 	EXPECT_EQ("2006", bib.getValue("date"));
 }
 
+TEST(BibParserTest, minimalKeys)
+{
+	BibParser parser;
+
+	auto singleBib = parser.parse("\\bib{A}{B}{"
+										  "a={Albiac, F.},"
+										  "a={Kalton, N.J.},"
+										  "t={Topics in Banach spaces theory},"
+										  "s={Grad. Text in Math.},"
+										  "v={233},"
+										  "p={Springer},"
+										  "d={2006},"
+										  "}");
+
+	EXPECT_EQ(1, singleBib.size());
+
+	auto& bib = singleBib.front();
+	EXPECT_EQ("A", bib.getCite());
+	EXPECT_EQ("B", bib.getEntryType());
+	EXPECT_EQ("Topics in Banach spaces theory", bib.getValue("t"));
+	EXPECT_EQ("Albiac, F.", bib.getValue("a"));
+	EXPECT_EQ("Kalton, N.J.", bib.getValue("a", 1));
+	EXPECT_EQ("Grad. Text in Math.", bib.getValue("s"));
+	EXPECT_EQ("233", bib.getValue("v"));
+	EXPECT_EQ("Springer", bib.getValue("p"));
+	EXPECT_EQ("2006", bib.getValue("d"));
+}
+
