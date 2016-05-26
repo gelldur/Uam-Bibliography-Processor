@@ -92,7 +92,7 @@ std::vector<KeyValue> BibParser::extract(const std::string& text)
 		//extract key
 		--lastFind;
 		int keyStart = lastFind;
-		while (keyStart > 0 && isAsciiLetter(text[keyStart]))
+		while (keyStart > -1 && isAsciiLetter(text[keyStart]))
 		{
 			--keyStart;
 		}

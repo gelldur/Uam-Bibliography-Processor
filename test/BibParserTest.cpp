@@ -29,3 +29,30 @@ TEST(BibParserTest, simple)
 	EXPECT_EQ("Springer", bib.getValue("publisher"));
 	EXPECT_EQ("2006", bib.getValue("date"));
 }
+
+TEST(BibParserTest, notFormated)
+{
+	BibParser parser;
+
+	auto singleBib = parser.parse("\\bib{LibroA}{book}{"
+										  "author={Albiac, F.},"
+										  "author={Kalton, N.J.},"
+										  "title={Topics in Banach spaces theory},"
+										  "series={Grad. Text in Math.},"
+										  "volume={233},"
+										  "publisher={Springer},"
+										  "date={2006},"
+										  "}");
+
+	EXPECT_EQ(1, singleBib.size());
+
+	auto& bib = singleBib.front();
+	EXPECT_EQ("LibroA", bib.getCite());
+	EXPECT_EQ("book", bib.getEntryType());
+	EXPECT_EQ("Albiac, F.", bib.getValue("author"));
+	EXPECT_EQ("Kalton, N.J.", bib.getValue("author", 1));
+	EXPECT_EQ("Grad. Text in Math.", bib.getValue("series"));
+	EXPECT_EQ("233", bib.getValue("volume"));
+	EXPECT_EQ("Springer", bib.getValue("publisher"));
+	EXPECT_EQ("2006", bib.getValue("date"));
+}
