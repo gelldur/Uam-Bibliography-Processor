@@ -169,3 +169,214 @@ TEST(BibParserTest, minimalKeysAndValuesRandomSpaces)
 	EXPECT_EQ("{  }  ", bib.getValue("d"));
 }
 
+TEST(BibParserTest, nested)
+{
+	BibParser parser;
+
+	auto singleBib = parser.parse("\\bib{KostrikinS1965}{article}{ author={Kostrikin, A. I.}, "
+										  "author={\\v{S}afarevi\\v{c}, I. R.}, title={Cartan pseudogroups and Lie "
+										  "$p$-algebras}, journal={Dokl. Akad. Nauk SSSR}, volume={168}, date={1965},"
+										  " pages={740--742}, translation={ journal={Soviet Math. Dokl.}, volume={6}, date={1965}, pages={715--718} }, review={\\MR{0199235}} }");
+
+	EXPECT_EQ(1, singleBib.size());
+
+	auto& bib = singleBib.front();
+	EXPECT_EQ("KostrikinS1965", bib.getCite());
+	EXPECT_EQ("article", bib.getEntryType());
+	EXPECT_EQ("Kostrikin, A. I.", bib.getValue("author"));
+	EXPECT_EQ("\\v{S}afarevi\\v{c}, I. R.", bib.getValue("author", 1));
+	EXPECT_EQ("168", bib.getValue("volume"));
+	EXPECT_EQ("1965", bib.getValue("date"));
+	EXPECT_EQ("740--742", bib.getValue("pages"));
+	EXPECT_EQ("\\MR{0199235}", bib.getValue("review"));
+	EXPECT_EQ(" journal={Soviet Math. Dokl.}, volume={6}, date={1965}, pages={715--718} ", bib.getValue("translation"));
+	//TODO check parsing nested
+	EXPECT_EQ("Dokl. Akad. Nauk SSSR", bib.getValue("journal"));
+	EXPECT_EQ("Cartan pseudogroups and Lie $p$-algebras", bib.getValue("title"));
+}
+
+TEST(BibParserTest, two)
+{
+	BibParser parser;
+
+	auto singleBib = parser.parse("\\bib{LibroA}{book}{\n"
+										  "  author={Albiac, F.},\n"
+										  "  author={Kalton, N.J.},\n"
+										  "  title={Topics in Banach spaces theory},\n"
+										  "  series={Grad. Text in Math.},\n"
+										  "  volume={233},\n"
+										  "  publisher={Springer},\n"
+										  "  date={2006},\n"
+										  "}\n"
+										  "\\bib{LibroCa}{book}{\n"
+										  "  author={Carothers, N.},\n"
+										  "  title={A~short course on Banach spaces theory},\n"
+										  "  series={London Math. Soc student text},\n"
+										  "  volume={64},\n"
+										  "  publisher={Cambridge Univ. Press},\n"
+										  "  date={2004},\n"
+										  "}");
+
+	EXPECT_EQ(2, singleBib.size());
+	{
+		auto& bib = singleBib[0];
+		EXPECT_EQ("LibroA", bib.getCite());
+		EXPECT_EQ("book", bib.getEntryType());
+		EXPECT_EQ("Albiac, F.", bib.getValue("author"));
+		EXPECT_EQ("Kalton, N.J.", bib.getValue("author", 1));
+		EXPECT_EQ("233", bib.getValue("volume"));
+		EXPECT_EQ("2006", bib.getValue("date"));
+		EXPECT_EQ("Grad. Text in Math.", bib.getValue("series"));
+		EXPECT_EQ("Springer", bib.getValue("publisher"));
+		EXPECT_EQ("Topics in Banach spaces theory", bib.getValue("title"));
+	}
+	{
+		auto& bib = singleBib[1];
+		EXPECT_EQ("LibroCa", bib.getCite());
+		EXPECT_EQ("book", bib.getEntryType());
+		EXPECT_EQ("Carothers, N.", bib.getValue("author"));
+		EXPECT_EQ("A~short course on Banach spaces theory", bib.getValue("title"));
+		EXPECT_EQ("London Math. Soc student text", bib.getValue("series"));
+		EXPECT_EQ("64", bib.getValue("volume"));
+		EXPECT_EQ("Cambridge Univ. Press", bib.getValue("publisher"));
+		EXPECT_EQ("2004", bib.getValue("date"));
+	}
+}
+
+TEST(BibParserTest, three)
+{
+	BibParser parser;
+
+	auto singleBib = parser.parse("\\bib{LibroA}{book}{\n"
+										  "  author={Albiac, F.},\n"
+										  "  author={Kalton, N.J.},\n"
+										  "  title={Topics in Banach spaces theory},\n"
+										  "  series={Grad. Text in Math.},\n"
+										  "  volume={233},\n"
+										  "  publisher={Springer},\n"
+										  "  date={2006},\n"
+										  "}\n"
+										  "\\bib{LibroCa}{book}{\n"
+										  "  author={Carothers, N.},\n"
+										  "  title={A~short course on Banach spaces theory},\n"
+										  "  series={London Math. Soc student text},\n"
+										  "  volume={64},\n"
+										  "  publisher={Cambridge Univ. Press},\n"
+										  "  date={2004},\n"
+										  "}\n"
+										  "\\bib{LibroC}{book}{\n"
+										  "  author={Cruz-Uribe, D.},\n"
+										  "  author={Fiorenza, A.},\n"
+										  "  title={Variable Lebesgue spaces. Foundations and harmonic analysis},\n"
+										  "  series={Applied and Numerical Harmonic Analysis},\n"
+										  "  publisher={Birkhauser/Springer},\n"
+										  "  place={Heidelberg.},\n"
+										  "  date={2013},\n"
+										  "}");
+
+	EXPECT_EQ(3, singleBib.size());
+	{
+		auto& bib = singleBib[0];
+		EXPECT_EQ("LibroA", bib.getCite());
+		EXPECT_EQ("book", bib.getEntryType());
+		EXPECT_EQ("Albiac, F.", bib.getValue("author"));
+		EXPECT_EQ("Kalton, N.J.", bib.getValue("author", 1));
+		EXPECT_EQ("233", bib.getValue("volume"));
+		EXPECT_EQ("2006", bib.getValue("date"));
+		EXPECT_EQ("Grad. Text in Math.", bib.getValue("series"));
+		EXPECT_EQ("Springer", bib.getValue("publisher"));
+		EXPECT_EQ("Topics in Banach spaces theory", bib.getValue("title"));
+	}
+	{
+		auto& bib = singleBib[1];
+		EXPECT_EQ("LibroCa", bib.getCite());
+		EXPECT_EQ("book", bib.getEntryType());
+		EXPECT_EQ("Carothers, N.", bib.getValue("author"));
+		EXPECT_EQ("A~short course on Banach spaces theory", bib.getValue("title"));
+		EXPECT_EQ("London Math. Soc student text", bib.getValue("series"));
+		EXPECT_EQ("64", bib.getValue("volume"));
+		EXPECT_EQ("Cambridge Univ. Press", bib.getValue("publisher"));
+		EXPECT_EQ("2004", bib.getValue("date"));
+	}
+	{
+		auto& bib = singleBib[2];
+		EXPECT_EQ("LibroC", bib.getCite());
+		EXPECT_EQ("book", bib.getEntryType());
+		EXPECT_EQ("Cruz-Uribe, D.", bib.getValue("author"));
+		EXPECT_EQ("Fiorenza, A.", bib.getValue("author", 1));
+		EXPECT_EQ("Variable Lebesgue spaces. Foundations and harmonic analysis", bib.getValue("title"));
+		EXPECT_EQ("Applied and Numerical Harmonic Analysis", bib.getValue("series"));
+		EXPECT_EQ("Heidelberg.", bib.getValue("place"));
+		EXPECT_EQ("Birkhauser/Springer", bib.getValue("publisher"));
+		EXPECT_EQ("2013", bib.getValue("date"));
+	}
+}
+
+TEST(BibParserTest, threeMinimalFormat)
+{
+	BibParser parser;
+
+	auto singleBib = parser.parse("\\bib{LibroA}{book}{"
+										  "author={Albiac, F.},"
+										  "author={Kalton, N.J.},"
+										  "title={Topics in Banach spaces theory},"
+										  "series={Grad. Text in Math.},"
+										  "volume={233},"
+										  "publisher={Springer},"
+										  "date={2006},"
+										  "}"
+										  "\\bib{LibroCa}{book}{"
+										  "author={Carothers, N.},"
+										  "title={A~short course on Banach spaces theory},"
+										  "series={London Math. Soc student text},"
+										  "volume={64},"
+										  "publisher={Cambridge Univ. Press},"
+										  "date={2004},"
+										  "}"
+										  "\\bib{LibroC}{book}{"
+										  "author={Cruz-Uribe, D.},"
+										  "author={Fiorenza, A.},"
+										  "title={Variable Lebesgue spaces. Foundations and harmonic analysis},"
+										  "series={Applied and Numerical Harmonic Analysis},"
+										  "publisher={Birkhauser/Springer},"
+										  "place={Heidelberg.},"
+										  "date={2013},"
+										  "}");
+
+	EXPECT_EQ(3, singleBib.size());
+	{
+		auto& bib = singleBib[0];
+		EXPECT_EQ("LibroA", bib.getCite());
+		EXPECT_EQ("book", bib.getEntryType());
+		EXPECT_EQ("Albiac, F.", bib.getValue("author"));
+		EXPECT_EQ("Kalton, N.J.", bib.getValue("author", 1));
+		EXPECT_EQ("233", bib.getValue("volume"));
+		EXPECT_EQ("2006", bib.getValue("date"));
+		EXPECT_EQ("Grad. Text in Math.", bib.getValue("series"));
+		EXPECT_EQ("Springer", bib.getValue("publisher"));
+		EXPECT_EQ("Topics in Banach spaces theory", bib.getValue("title"));
+	}
+	{
+		auto& bib = singleBib[1];
+		EXPECT_EQ("LibroCa", bib.getCite());
+		EXPECT_EQ("book", bib.getEntryType());
+		EXPECT_EQ("Carothers, N.", bib.getValue("author"));
+		EXPECT_EQ("A~short course on Banach spaces theory", bib.getValue("title"));
+		EXPECT_EQ("London Math. Soc student text", bib.getValue("series"));
+		EXPECT_EQ("64", bib.getValue("volume"));
+		EXPECT_EQ("Cambridge Univ. Press", bib.getValue("publisher"));
+		EXPECT_EQ("2004", bib.getValue("date"));
+	}
+	{
+		auto& bib = singleBib[2];
+		EXPECT_EQ("LibroC", bib.getCite());
+		EXPECT_EQ("book", bib.getEntryType());
+		EXPECT_EQ("Cruz-Uribe, D.", bib.getValue("author"));
+		EXPECT_EQ("Fiorenza, A.", bib.getValue("author", 1));
+		EXPECT_EQ("Variable Lebesgue spaces. Foundations and harmonic analysis", bib.getValue("title"));
+		EXPECT_EQ("Applied and Numerical Harmonic Analysis", bib.getValue("series"));
+		EXPECT_EQ("Heidelberg.", bib.getValue("place"));
+		EXPECT_EQ("Birkhauser/Springer", bib.getValue("publisher"));
+		EXPECT_EQ("2013", bib.getValue("date"));
+	}
+}
