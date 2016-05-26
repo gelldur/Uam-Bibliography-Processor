@@ -13,7 +13,16 @@ public:
 	std::vector<Bib> parse(const std::string& text);
 
 private:
-	Bib parse(const char* bibBegin, const char* bibEnd);
+	void parse(const std::string& text, Bib& bib);
+
+	std::pair<size_t, std::string> extractBraces(const std::string& text, size_t offset);
+
+	std::vector<KeyValue> extract(const std::string& text);
+
+	bool isAsciiLetter(char letter);
+
+	std::vector<std::string>& split(const std::string& text, char delim, std::vector<std::string>& elements);
+	std::vector<std::string> split(const std::string& text, char delim);
 };
 
 

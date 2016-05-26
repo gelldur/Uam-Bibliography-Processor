@@ -10,21 +10,27 @@
 class KeyValue
 {
 public:
-	KeyValue(const std::string& key, const std::vector<std::string>& values = {});
+	KeyValue(const std::string& key = "", const std::string& value = "");
 
 	const std::string& getKey() const
 	{
 		return _key;
 	}
 
-	const std::string& getValue(int offset = 0) const
+	const std::string& getValue() const
 	{
-		return _values.at(offset);
+		return _value;
+	}
+
+	bool hasNested()
+	{
+		return false;//TODO implement
 	}
 
 private:
 	std::string _key;
-	std::vector<std::string> _values;
+	std::string _value;
+	std::vector<KeyValue> _nasted;
 };
 
 

@@ -4,8 +4,9 @@
 
 #include "KeyValue.h"
 
-KeyValue::KeyValue(const std::string& key, const std::vector<std::string>& values)
+KeyValue::KeyValue(const std::string& key, const std::string& value)
 		: _key(key)
-		, _values(values)
+		, _value(value)
 {
 }
+
