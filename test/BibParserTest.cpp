@@ -28,6 +28,7 @@ TEST(BibParserTest, simple)
 	EXPECT_EQ("233", bib.getValue("volume"));
 	EXPECT_EQ("Springer", bib.getValue("publisher"));
 	EXPECT_EQ("2006", bib.getValue("date"));
+	EXPECT_EQ("Topics in Banach spaces theory", bib.getValue("title"));
 }
 
 TEST(BibParserTest, notFormated)
