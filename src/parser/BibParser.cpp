@@ -64,12 +64,11 @@ std::pair<size_t, std::string> BibParser::extractBraces(const std::string& text,
 		else if (text[i] == '}' && open > 0)
 		{
 			--open;
-		}
-
-		if (open < 1)
-		{
-			end = i;
-			break;
+			if (open < 1)
+			{
+				end = i;
+				break;
+			}
 		}
 	}
 
