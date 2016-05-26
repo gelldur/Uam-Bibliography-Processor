@@ -73,3 +73,8 @@ If you are able to mark up your citations, we also support XML querying as descr
 http://help.crossref.org/query_basics
 
 XML querying is very accurate and the results do not require evaluation.
+
+----
+# Useful
+
+http://bib-it.sourceforge.net/help/fieldsAndEntryTypes.php#article
