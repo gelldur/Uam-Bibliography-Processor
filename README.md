@@ -4,7 +4,7 @@ Task for passing classes
 # Description
 Założenia są następujące:
 Aplikacja jednostanowiskowa, nie wymagana jest obsługa wielu użytkowników.
-Program ma pracować na plikach z bibliografią w formacie amsrefs (wpis typu key-value, np. author={Mleczko, P.}, w dokumentach ma dokonywać zmian w dwóch rzeczach:
+Program ma pracować na plikach z bibliografią w formacie amsrefs (wpis typu key-value, np. `author={Mleczko, P.}`, w dokumentach ma dokonywać zmian w dwóch rzeczach:
 1. pozyskiwał z sieci numer doi pozycji (być mże uda się z http://search.crossref.org/ bądź innego serwsu)
 2. sprawdzałby, czy nazwa czasopisma wpisana jest w poprawnej formie skróconej (np. Stud. Math. a nie Studia Mathematica lub Studia Math.). Bazę skrótów jest wstępnie przygotowana – mogłaby być rozszerzana. Poprawiony skrót powinien być akceptowany przez użytkownika – albo przez niego wprowadzany. Dane można zapisywać w tworzonej własnej bazie (trzymanej w pliku xml, czy SQL Lite)
 
@@ -14,8 +14,9 @@ Przykład:
 
 Np. dane to plik tekstowy z bibliografią w formacie amsrefs (w załaczeniu
 przykład)
-Zapis ma być w tym samym formacie z dopisanymi polami  doi={}, np. wpis
+Zapis ma być w tym samym formacie z dopisanymi polami  `doi={}`, np. wpis
 
+```
 \bib{FHKT}{article}{
    author={Flores, J.},
    author={Hern{\'a}ndez, {F.\,L.}},
@@ -27,9 +28,11 @@ Zapis ma być w tym samym formacie z dopisanymi polami  doi={}, np. wpis
    date={2009},
    pages={612--630},
 }
+```
 
 powinien wyglądać tak:
 
+```
 \bib{FHKT}{article}{
    author={Flores, J.},
    author={Hern{\'a}ndez, {F.\,L.}},
@@ -42,6 +45,7 @@ powinien wyglądać tak:
    pages={612--630},
    doi={10.1112/jlms/jdp007},
 }
+```
 
 
 http://search.crossref.org/help/api
