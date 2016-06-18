@@ -6,6 +6,7 @@
 
 #include <sstream>
 #include <cassert>
+#include <regex>
 
 using namespace std;
 
@@ -81,28 +82,34 @@ std::pair<size_t, std::string> BibParser::extractBraces(const std::string& text,
 
 std::vector<KeyValue> BibParser::extract(const std::string& text)
 {
-	//Find all key=value
+	//Find all key={value}
 	std::vector<KeyValue> keyValues;
 
-	int lastFind = 0;
-	const std::string KEY = "={";
-	while ((lastFind = text.find(KEY, lastFind)) != string::npos)
+	long lastFind = 0;
+	std::smatch matcher;
+	std::regex expression(R"(\s*=\s*\{)");
+	while (std::regex_search(text.begin() + lastFind, text.end(), matcher, expression))
 	{
-		//extract key
-		--lastFind;
-		int keyStart = lastFind;
-		while (keyStart > -1 && isAsciiLetter(text[keyStart]))
+		for (int i = 0; i < matcher.size(); ++i)
 		{
-			--keyStart;
+			//extract key
+			const auto positionOfMatch = matcher.position(i) - 1 + lastFind;
+			long keyStart = positionOfMatch;
+			while (keyStart > -1 && isAsciiLetter(text[keyStart]))
+			{
+				--keyStart;
+			}
+			++keyStart;
+			assert(keyStart <= positionOfMatch);
+			assert(keyStart >= 0);
+
+			lastFind = positionOfMatch + matcher.length(i);
+			auto value = extractBraces(text, lastFind);
+			lastFind = value.first;
+			KeyValue keyValue(text.substr(keyStart, positionOfMatch - keyStart + 1), value.second);
+
+			keyValues.emplace_back(keyValue);
 		}
-		++keyStart;
-		assert(keyStart <= lastFind && "Invalid!");
-
-		auto value = extractBraces(text, lastFind + KEY.length());
-		KeyValue keyValue(text.substr(keyStart, lastFind - keyStart + 1), value.second);
-
-		keyValues.emplace_back(keyValue);
-		lastFind = value.first;
 	}
 
 	return keyValues;

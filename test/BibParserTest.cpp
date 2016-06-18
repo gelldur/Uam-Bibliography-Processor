@@ -449,3 +449,90 @@ TEST(BibParserTest, threeWithNewLinesAndTabs)
 		EXPECT_EQ("2013", bib.getValue("date"));
 	}
 }
+
+TEST(BibParserTest, testCase1)
+{
+	BibParser parser;
+
+	auto singleBib = parser.parse("\\bib   {FHKT}     {article}{\n"
+										  "\n"
+										  "   author={Flores, J.}   ,\n"
+										  "\n"
+										  "   author={Hern{\\'a}ndez, {F.\\,L.}}  ,\n"
+										  "\n"
+										  "   author={Kalton, {N.\\,J.}    },\n"
+										  "\n"
+										  "   author={Tradacete, P.}    ,\n"
+										  "\n"
+										  "   title={Characterizations of strictly singular operators on Banach\n"
+										  "lattices},\n"
+										  "\n"
+										  "   journal={J. London Math. Soc.}         ,\n"
+										  "\n"
+										  "               volume={79},\n"
+										  "\n"
+										  "      date={2009}         ,\n"
+										  "\n"
+										  "   pages={612--630}          ,\n"
+										  "\n"
+										  "}");
+
+	EXPECT_EQ(1, singleBib.size());
+
+	auto& bib = singleBib.front();
+	EXPECT_EQ("FHKT", bib.getCite());
+	EXPECT_EQ("article", bib.getEntryType());
+	EXPECT_EQ("Flores, J.", bib.getValue("author"));
+	EXPECT_EQ("Hern{\\'a}ndez, {F.\\,L.}", bib.getValue("author", 1));
+	EXPECT_EQ("Kalton, {N.\\,J.}    ", bib.getValue("author", 2));
+	EXPECT_EQ("Tradacete, P.", bib.getValue("author", 3));
+	EXPECT_EQ("Characterizations of strictly singular operators on Banach\nlattices", bib.getValue("title"));
+	EXPECT_EQ("J. London Math. Soc.", bib.getValue("journal"));
+	EXPECT_EQ("79", bib.getValue("volume"));
+	EXPECT_EQ("2009", bib.getValue("date"));
+	EXPECT_EQ("612--630", bib.getValue("pages"));
+}
+
+TEST(BibParserTest, spacesInKeyValue)
+{
+	BibParser parser;
+
+	auto singleBib = parser.parse("\\bib   {FHKT}     {article}{\n"
+										  "\n"
+										  "   author=          {Flores, J.}   ,"
+										  ""
+										  "   author     ={Hern{\\'a}ndez, {F.\\,L.}}  ,\n"
+										  "\n"
+										  "   author =    {Kalton, {N.\\,J.}    },\n"
+										  "\n"
+										  "   author     =     {Tradacete, P.}    ,\n"
+										  "\n"
+										  "   title           ={Characterizations of strictly singular operators on "
+										  "Banach\n"
+										  "lattices},\n"
+										  "\n"
+										  "   journal= {J. London Math. Soc.}         ,\n"
+										  "\n"
+										  "               volume={79},\n"
+										  "\n"
+										  "      date = {2009}         ,\n"
+										  "\n"
+										  "   pages         ={612--630}          ,\n"
+										  "\n"
+										  "}");
+
+	EXPECT_EQ(1, singleBib.size());
+
+	auto& bib = singleBib.front();
+	EXPECT_EQ("FHKT", bib.getCite());
+	EXPECT_EQ("article", bib.getEntryType());
+	EXPECT_EQ("Flores, J.", bib.getValue("author"));
+	EXPECT_EQ("Hern{\\'a}ndez, {F.\\,L.}", bib.getValue("author", 1));
+	EXPECT_EQ("Kalton, {N.\\,J.}    ", bib.getValue("author", 2));
+	EXPECT_EQ("Tradacete, P.", bib.getValue("author", 3));
+	EXPECT_EQ("Characterizations of strictly singular operators on Banach\nlattices", bib.getValue("title"));
+	EXPECT_EQ("J. London Math. Soc.", bib.getValue("journal"));
+	EXPECT_EQ("79", bib.getValue("volume"));
+	EXPECT_EQ("2009", bib.getValue("date"));
+	EXPECT_EQ("612--630", bib.getValue("pages"));
+}
