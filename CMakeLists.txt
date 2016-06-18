@@ -7,7 +7,10 @@ SET(SOURCE_FILES main.cpp
 		src/parser/BibParser.cpp src/parser/BibParser.h
 		src/parser/model/KeyValue.cpp src/parser/model/KeyValue.h
 		src/parser/model/Bib.cpp src/parser/model/Bib.h
+		src/DoiGeter.cpp src/DoiGeter.h
+		src/NameValidator.cpp src/NameValidator.h
 		)
+
 SET(TEST_SOURCE_FILES
 		test/BibParserTest.cpp
 		)
