@@ -6,8 +6,9 @@
 #include <gtest/gtest.h>
 
 #include <parser/BibParser.h>
-#include <DoiGeter.h>
+#include <doi/Crossref.h>
 #include <NameValidator.h>
+#include <Config.h>
 
 using namespace std;
 
@@ -25,7 +26,23 @@ int Main(const vector<string>& args)
 		return 1;
 	}
 
-	ifstream file(args[1]);
+	auto configFlag = std::find(args.begin(), args.end(), "--config");
+	if (configFlag == args.end())
+	{
+		cout << "Missing config flag (--config FILE_PATH)" << endl;
+		return 1;
+	}
+
+	Config config{*(++configFlag)};
+
+	auto inputFlag = std::find(args.begin(), args.end(), "--input");
+	if (inputFlag == args.end())
+	{
+		cout << "Missing input flag (--input FILE_PATH)" << endl;
+		return 2;
+	}
+
+	ifstream file(*(++inputFlag));
 	if (file.is_open() == false)
 	{
 		cout << "Can't open file:" << args[1] << endl;
@@ -38,17 +55,19 @@ int Main(const vector<string>& args)
 	auto bibs = parser.parse(content);
 	cout << "Parsing file success!" << endl;
 	cout << "Found:" << bibs.size() << " bibs" << endl;
-	for (auto& element : bibs)
-	{
-		cout << element.getCite() << endl;
-	}
+	//	for (auto& element : bibs)
+	//	{
+	//		cout << element.getCite() << endl;
+	//	}
 
+	if (config.isCrossrefEnabled())
 	{
-		DoiGeter doiGetet;
-		doiGetet.checkMissingDoi(bibs);
+		Crossref crossref{config};
+		crossref.fetchDoi(bibs);
 	}
+	if (config.isNameValidatorEnabled())
 	{
-		NameValidator nameValidator;
+		NameValidator nameValidator{config};
 		nameValidator.check(bibs);
 	}
 	return 0;
