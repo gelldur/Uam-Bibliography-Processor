@@ -10,3 +10,7 @@ KeyValue::KeyValue(const std::string& key, const std::string& value)
 {
 }
 
+void KeyValue::setValue(const std::string& value)
+{
+	_value = value;
+}

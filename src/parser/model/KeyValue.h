@@ -27,6 +27,8 @@ public:
 		return false;//TODO implement
 	}
 
+	void setValue(const std::string& value);
+
 private:
 	std::string _key;
 	std::string _value;
