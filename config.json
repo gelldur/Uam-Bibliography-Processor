@@ -1,6 +1,6 @@
 {
    "crossref" : {
-      "enable" : false,
+      "enable" : true,
       "types" : [
          {
             "amsrefType" : "article",
