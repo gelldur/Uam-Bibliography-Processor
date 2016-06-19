@@ -93,7 +93,14 @@ bool Crossref::checkDoi(Bib& bib)
 
 		if (doi.empty() == false)
 		{
-			bib.add({"doi", doi});
+			if (bib.hasKey("doi"))
+			{
+				bib.setValue("doi", doi);
+			}
+			else
+			{
+				bib.add({"doi", doi});
+			}
 			return true;
 		}
 
