@@ -77,6 +77,21 @@ http://help.crossref.org/query_basics
 XML querying is very accurate and the results do not require evaluation.
 
 ----
+# config.json
+Opcje:
+ - replaceExistingDoi Jesli true to zastąpi aktualne DOI jeśli zostanie znalezione nowe
+
+
+Moduł crossref
+ - enable (true/false) Włącza/Wyłącza użycie crossref do szukania DOI
+ - types Jest to mapa typów z amsref do tego co używa crossref. Lista dostępnych typów jest pod adresem: http://api.crossref.org/types
+
+Moduł nameValidator
+ - enable (true/false) Włącza/Wyłącza sprawdzanie pola "journal" w każdym BIB
+ - askBeforeReplace Przed każdą "poprawą" journal w BIB pytasię.
+ - replaceMap Mapa z wszystkim zmień z czego ("from") na co ("to")
+
+----
 # Useful
 
 http://bib-it.sourceforge.net/help/fieldsAndEntryTypes.php#article
