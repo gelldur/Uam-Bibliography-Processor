@@ -1,0 +1,39 @@
+{
+   "crossref" : {
+      "enable" : false,
+      "types" : [
+         {
+            "amsrefType" : "article",
+            "to" : "journal-article"
+         },
+         {
+            "amsrefType" : "book",
+            "to" : "book"
+         }
+      ]
+   },
+   "nameValidator" : {
+      "askBeforeReplace" : false,
+      "enable" : true,
+      "replaceMap" : [
+         {
+            "from" : "C.R. Acad. Sci. Paris",
+            "to" : "C. R. Math. Acad. Sci. Paris"
+         },
+         {
+            "from" : "Studia Math.",
+            "to" : "Stud. Math."
+         },
+         {
+            "from" : "Studia Mathematica",
+            "to" : "Stud. Math."
+         }
+      ]
+   },
+   "options" : [
+      {
+         "name" : "replaceExistingDoi",
+         "value" : true
+      }
+   ]
+}
