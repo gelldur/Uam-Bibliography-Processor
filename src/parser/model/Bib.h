@@ -42,6 +42,8 @@ public:
 	void add(const std::vector<KeyValue>& keyValues);
 	void add(const KeyValue& keyValue);
 
+	std::string toString() const;
+
 private:
 	std::string _cite;
 	std::string _entryType;

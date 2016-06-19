@@ -70,6 +70,23 @@ int Main(const vector<string>& args)
 		NameValidator nameValidator{config};
 		nameValidator.check(bibs);
 	}
+
+	cout << "Saving BIBS" << endl;
+
+	std::ofstream fileOutput((*inputFlag) + ".new");
+	if (file.is_open() == false)
+	{
+		std::cout << "Can't save BIBS!" << std::endl;
+		return 3;
+	}
+	for (const auto& bib : bibs)
+	{
+		fileOutput << bib.toString();
+		fileOutput.flush();
+	}
+	fileOutput.flush();
+	fileOutput.close();
+
 	return 0;
 }
 

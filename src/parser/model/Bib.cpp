@@ -5,6 +5,7 @@
 #include "Bib.h"
 
 #include <algorithm>
+#include <sstream>
 
 const std::string& Bib::getValue(const std::string& key, size_t offset)
 {
@@ -45,7 +46,6 @@ const KeyValue& Bib::getKeyValue(const std::string& key, size_t offset)
 	}
 	throw std::runtime_error(std::string("Key not found:") + key);
 }
-
 
 void Bib::setValue(const std::string& key, const std::string& value, size_t offset)
 {
@@ -105,3 +105,17 @@ int Bib::getValuesCount(const std::string& key)
 	}
 	return foundCount;
 }
+
+std::string Bib::toString() const
+{
+	std::ostringstream output;
+	output << "\\bib{" << getCite() << "}{" << getEntryType() << "}{\n";
+	for (const auto& element : _keyValues)
+	{
+		output << "  " << element.getKey() << "={" << element.getValue() << "},\n";
+	}
+	output << "}\n";
+	return output.str();
+}
+
+
