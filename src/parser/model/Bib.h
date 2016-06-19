@@ -22,7 +22,12 @@ public:
 	}
 
 	const std::string& getValue(const std::string& key, size_t offset = 0);
+	const std::string& getValueSafe(const std::string& key, const std::string& defaultValue = "", size_t offset = 0);
 	const KeyValue& getKeyValue(const std::string& key, size_t offset = 0);
+	void setValue(const std::string& key, const std::string& value, size_t offset = 0);
+
+	bool hasKey(const std::string& key);
+	int getValuesCount(const std::string& key);
 
 	void setCite(const std::string& cite)
 	{
@@ -35,6 +40,7 @@ public:
 	}
 
 	void add(const std::vector<KeyValue>& keyValues);
+	void add(const KeyValue& keyValue);
 
 private:
 	std::string _cite;
